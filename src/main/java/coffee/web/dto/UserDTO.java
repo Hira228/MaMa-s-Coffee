@@ -1,11 +1,13 @@
 package coffee.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Collection;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -14,6 +16,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDTO {
     @NonNull
+    @JsonIgnore
     UUID id;
 
     @NonNull
@@ -22,4 +25,9 @@ public class UserDTO {
     @NonNull
     String password;
 
+    @NonNull
+    String confirmPassword;
+
+    @JsonIgnore
+    Collection<String> roles;
 }
