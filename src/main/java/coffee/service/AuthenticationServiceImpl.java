@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,10 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
 
     @Override
-    public ResponseEntity<?> registerUser(UserDTO userDTO) {
+    public ResponseEntity<?> registerUser(UserDTO userDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(new AuthError(HttpStatus.BAD_REQUEST.value(), "Please fill in all fields for registration."), HttpStatus.BAD_REQUEST);
+        }
         if (!userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
             throw new BadRequestException("Passwords don't match");
         }
@@ -40,7 +44,10 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     }
 
     @Override
-    public ResponseEntity<?> authenticateUser(AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<?> authenticateUser(AuthenticationRequest authenticationRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(new AuthError(HttpStatus.BAD_REQUEST.value(), "Please complete all fields to log in."), HttpStatus.BAD_REQUEST);
+        }
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     authenticationRequest.getUsername(),

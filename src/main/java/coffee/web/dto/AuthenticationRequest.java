@@ -1,5 +1,6 @@
 package coffee.web.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -8,9 +9,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthenticationRequest {
-    @NonNull
+    @NotNull
     String username;
 
-    @NonNull
+    @NotNull
     String password;
 }

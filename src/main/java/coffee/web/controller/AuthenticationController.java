@@ -7,6 +7,7 @@ import coffee.utils.JwtTokenUtils;
 import coffee.web.dto.AuthenticationDTO;
 import coffee.web.dto.AuthenticationRequest;
 import coffee.web.dto.UserDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,13 +32,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<?> signUP(@RequestBody UserDTO userDTO) {
-        return authenticationService.registerUser(userDTO);
-
+    public ResponseEntity<?> signUP(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult) {
+        return authenticationService.registerUser(userDTO, bindingResult);
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<?> signIn(@RequestBody AuthenticationRequest authenticationRequest) {
-        return authenticationService.authenticateUser(authenticationRequest);
+    public ResponseEntity<?> signIn(@Valid @RequestBody AuthenticationRequest authenticationRequest, BindingResult bindingResult) {
+        return authenticationService.authenticateUser(authenticationRequest, bindingResult);
     }
 }

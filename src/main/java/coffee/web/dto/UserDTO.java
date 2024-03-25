@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,17 +16,17 @@ import java.util.UUID;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDTO {
-    @NonNull
+    @NotNull
     @JsonIgnore
     UUID id;
 
-    @NonNull
+    @NotNull
     String username;
 
-    @NonNull
+    @NotNull
     String password;
 
-    @NonNull
+    @NotNull
     String confirmPassword;
 
     @JsonIgnore
