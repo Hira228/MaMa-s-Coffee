@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -23,12 +25,12 @@ public class Order {
 
     @Column(name = "user_id")
     UUID userId;
-//
+
 //    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 //    @JoinColumn(name = "order_id")
-//    List<OrderItem> items;
+//    List<OrderItemDTO> items;
 //
-//    LocalDateTime placedAt;
+//    Date placedAt;
 //
 //    @Enumerated(EnumType.STRING)
 //    OrderStatus status;

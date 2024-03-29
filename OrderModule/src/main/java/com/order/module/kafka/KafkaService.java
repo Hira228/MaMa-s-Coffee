@@ -20,14 +20,25 @@ public class KafkaService {
     private final ReplyingKafkaTemplate<String, Object, Object> template;
 
     @Value("${order.send-topics}")
-    private String SEND_TOPICS;
+    private String SEND_TOPICS_AUTH;
+
+    @Value("${order.send-menu}")
+    private String SEND_TOPICS_MENU;
 
 
-    public Object kafkaRequestReply(Object request) throws Exception {
-        ProducerRecord<String, Object> record = new ProducerRecord<>(SEND_TOPICS, request);
+    public Object authenticateUser(Object request) throws Exception {
+        ProducerRecord<String, Object> record = new ProducerRecord<>(SEND_TOPICS_AUTH, request);
         RequestReplyFuture<String, Object, Object> replyFuture = template.sendAndReceive(record);
         SendResult<String, Object> sendResult = replyFuture.getSendFuture().get(10, TimeUnit.SECONDS);
         ConsumerRecord<String, Object> consumerRecord = replyFuture.get(10, TimeUnit.SECONDS);
         return consumerRecord.value();
     }
+    public Object getMenu(Object request) throws Exception {
+        ProducerRecord<String, Object> record = new ProducerRecord<>(SEND_TOPICS_MENU, request);
+        RequestReplyFuture<String, Object, Object> replyFuture = template.sendAndReceive(record);
+        SendResult<String, Object> sendResult = replyFuture.getSendFuture().get(10, TimeUnit.SECONDS);
+        ConsumerRecord<String, Object> consumerRecord = replyFuture.get(10, TimeUnit.SECONDS);
+        return consumerRecord.value();
+    }
+
 }
