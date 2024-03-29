@@ -1,0 +1,14 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: create
+order:
+  send-topics: token-validation-topic
+  reply-topics: token-validation-topic-reply
+  consumer-group: token-validation-group
