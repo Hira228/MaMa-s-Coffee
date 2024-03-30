@@ -1,0 +1,20 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: menu-service
+          uri: lb://MENU-SERVICE
+          predicates:
+            - Path=/menu/**
+
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order/**
+  application:
+    name: MAMA-GATEWAY
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

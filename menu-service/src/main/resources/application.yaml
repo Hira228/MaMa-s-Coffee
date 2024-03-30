@@ -1,0 +1,25 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/menu
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+  application:
+    name: MENU-SERVICE
+
+MENU-SERVICE:
+  send-menu: get-menu-topic
+  reply-menu: get-menu-topic-reply
+  consumer-group-menu: get-menu-group
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
