@@ -1,5 +1,6 @@
 package coffee.service;
 
+import coffee.entity.User;
 import coffee.exceptions.AuthError;
 import coffee.exceptions.BadRequestException;
 import coffee.exceptions.UnauthorizedException;
@@ -7,7 +8,10 @@ import coffee.utils.JwtTokenUtils;
 import coffee.web.dto.AuthenticationDTO;
 import coffee.web.dto.AuthenticationRequest;
 import coffee.web.dto.UserDTO;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,12 +23,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserService userService;
     private final JwtTokenUtils jwtTokenUtils;
     private final AuthenticationManager authenticationManager;
+    private final RedisTemplate<String, Object> redisTemplate;
 
 
     @Override
@@ -49,15 +56,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return new ResponseEntity<>(new AuthError(HttpStatus.BAD_REQUEST.value(), "Please complete all fields to log in."), HttpStatus.BAD_REQUEST);
         }
         try {
+
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     authenticationRequest.getUsername(),
                     authenticationRequest.getPassword()
             ));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUsername());
-            return ResponseEntity.ok(new AuthenticationDTO(jwtTokenUtils.generateToken(userDetails)));
+
+            String token = jwtTokenUtils.generateToken(userDetails);
+            redisTemplate.opsForValue().set(authenticationRequest.getUsername(), token);
+
+            return ResponseEntity.ok(new AuthenticationDTO(token));
         } catch (BadCredentialsException err) {
             throw new UnauthorizedException("Invalid login or password");
         }
     }
+
+    @Override
+    public ResponseEntity<?> getId(HttpServletRequest httpServlet) {
+        String authHeader = httpServlet.getHeader("Authorization");
+        String token = authHeader.substring(7);
+        String username = jwtTokenUtils.getUsername(token);
+        return ResponseEntity.ok().body(userService.findByUsername(username).getId());
+    }
+
 }

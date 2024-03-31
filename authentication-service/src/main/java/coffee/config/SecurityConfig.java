@@ -30,9 +30,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/api/v1/signIn", "/api/v1/signUp").permitAll()
-                                .requestMatchers("/api/v1/**").authenticated()
-                                .requestMatchers("/api/v1/admin").hasAnyRole("ADMIN")
+                                .requestMatchers("/auth/signIn", "/auth/signUp").permitAll()
+                                .requestMatchers("/auth/validate", "auth/get-id").authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))

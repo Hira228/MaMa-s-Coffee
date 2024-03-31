@@ -3,6 +3,7 @@ package coffee.web.controller;
 import coffee.service.AuthenticationService;
 import coffee.web.dto.AuthenticationRequest;
 import coffee.web.dto.UserDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,15 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/auth")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
-
-    @GetMapping("/mama")
-    @PreAuthorize("hasAuthority('CLIENT')")
-    public String getMama() {
-        return "mama";
-    }
 
     @PostMapping("/signUp")
     public ResponseEntity<?> signUP(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult) {
@@ -30,5 +25,17 @@ public class AuthenticationController {
     @PostMapping("/signIn")
     public ResponseEntity<?> signIn(@Valid @RequestBody AuthenticationRequest authenticationRequest, BindingResult bindingResult) {
         return authenticationService.authenticateUser(authenticationRequest, bindingResult);
+    }
+
+    @GetMapping("/validate")
+    @PreAuthorize("hasAuthority('CLIENT')")
+    public ResponseEntity<?> validateToken() {
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/get-id")
+    @PreAuthorize("hasAuthority('CLIENT')")
+    public ResponseEntity<?> getToken(HttpServletRequest request) {
+        return authenticationService.getId(request);
     }
 }

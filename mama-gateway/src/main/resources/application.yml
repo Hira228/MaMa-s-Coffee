@@ -6,11 +6,20 @@ spring:
           uri: lb://MENU-SERVICE
           predicates:
             - Path=/menu/**
+          filters:
+            - AuthenticationFilter
 
         - id: order-service
           uri: lb://ORDER-SERVICE
           predicates:
             - Path=/order/**
+          filters:
+            - AuthenticationFilter
+
+        - id: authenticate-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
   application:
     name: MAMA-GATEWAY
 

@@ -1,7 +1,5 @@
-package com.order.module.entity;
+package com.order.module.web.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderItem {
+public class OrderItemDTO {
     UUID menuItemId;
 
     int quantity;

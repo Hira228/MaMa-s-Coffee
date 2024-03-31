@@ -71,9 +71,7 @@ public class JwtTokenUtils {
     }
 
     public boolean isValidToken(String token) {
-        if (token == null || !token.startsWith("Bearer ")) return false;
-
-        token = token.substring(7);
+        ;
         Claims claims;
 
         try {

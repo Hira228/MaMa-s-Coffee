@@ -1,27 +1,24 @@
 spring:
   application:
     name: AUTH-SERVICE
-  kafka:
-    bootstrap-servers: localhost:9092
+
   datasource:
     url: jdbc:postgresql://localhost:5432/authentication
     username: postgres
     password: postgres
+
   jpa:
     hibernate:
       ddl-auto: create
+
 jwt:
   token:
     secret:
       key: 276c393d71334a692d3759562450442b752f285e6b6d2d62247258452a232639
     lifetime: 30m
+
 server:
   port: 8000
-
-AUTH-SERVICE:
-  send-topics: token-validation-topic
-  reply-topics: token-validation-topic-reply
-  consumer-group: token-validation-group
 
 eureka:
   client:
