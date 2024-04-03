@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -25,8 +27,14 @@ public class OrderController {
         return orderService.addPositionOrder(positionRequest, authorizationHeader);
     }
 
-    @PostMapping("execute-order")
+    @PostMapping("/execute-order")
     public ResponseEntity<?> executeOrder(@RequestHeader("Authorization") String authorizationHeader) {
         return orderService.executeOrder(authorizationHeader);
+    }
+
+    @DeleteMapping("/delete-position/{idPosition}")
+    public ResponseEntity<?> unСart(@PathVariable UUID idPosition,
+                                    @RequestHeader("Authorization") String authorizationHeader) {
+        return orderService.unСart(idPosition, authorizationHeader);
     }
 }

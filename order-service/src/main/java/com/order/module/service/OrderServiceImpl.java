@@ -70,4 +70,24 @@ public class OrderServiceImpl implements OrderService{
 
         return new ResponseEntity<>(new AuthError(HttpStatus.ACCEPTED.value(), "Your order has arrived in the kitchen. It will be ready soon."), HttpStatus.ACCEPTED);
     }
+
+    @Override
+    public ResponseEntity<?> unСart(UUID idPosition, String token) {
+        String userIdStr = Objects.requireNonNull(redisTemplate.opsForValue().get(token.substring(7))).toString();
+        if(userIdStr == null) return new ResponseEntity<>(new AuthError(HttpStatus.UNAUTHORIZED.value(), "Re-authorize"),  HttpStatus.UNAUTHORIZED);
+
+        Order order = orderRepository.findOrderByUserId(UUID.fromString(userIdStr));
+
+        if(order == null) return new ResponseEntity<>(new AuthError(HttpStatus.NO_CONTENT.value(), "You have an empty shopping cart"), HttpStatus.NO_CONTENT);
+
+        for (Iterator<OrderItem> iterator = order.getItems().iterator(); iterator.hasNext();) {
+            OrderItem item = iterator.next();
+            if (item.getMenuItemId().equals(idPosition)) {
+                iterator.remove();
+                orderRepository.save(order);
+                return new ResponseEntity<>(new AuthError(HttpStatus.OK.value(), "Position removed successfully"), HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(new AuthError(HttpStatus.NOT_FOUND.value(), "No position with this id was found"), HttpStatus.NOT_FOUND);
+    }
 }
