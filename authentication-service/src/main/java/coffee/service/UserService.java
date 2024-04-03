@@ -1,6 +1,7 @@
 package coffee.service;
 
 import coffee.entity.User;
+import coffee.kafka.KafkaProducer;
 import coffee.repository.UserRepository;
 import coffee.web.dto.UserDTO;
 import coffee.web.mapper.UserMapper;

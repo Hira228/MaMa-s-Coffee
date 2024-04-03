@@ -71,7 +71,7 @@ public class JwtTokenUtils {
     }
 
     public boolean isValidToken(String token) {
-        ;
+
         Claims claims;
 
         try {

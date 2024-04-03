@@ -4,6 +4,7 @@ import coffee.entity.User;
 import coffee.exceptions.AuthError;
 import coffee.exceptions.BadRequestException;
 import coffee.exceptions.UnauthorizedException;
+import coffee.kafka.KafkaProducer;
 import coffee.utils.JwtTokenUtils;
 import coffee.web.dto.AuthenticationDTO;
 import coffee.web.dto.AuthenticationRequest;
@@ -32,6 +33,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtTokenUtils jwtTokenUtils;
     private final AuthenticationManager authenticationManager;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final KafkaProducer kafkaProducer;
 
 
     @Override
@@ -63,22 +65,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             ));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUsername());
-
             String token = jwtTokenUtils.generateToken(userDetails);
             redisTemplate.opsForValue().set(authenticationRequest.getUsername(), token);
+
+            kafkaProducer.sendDataUserInsert(token, userService.findByUsername(authenticationRequest.getUsername()).getId());
 
             return ResponseEntity.ok(new AuthenticationDTO(token));
         } catch (BadCredentialsException err) {
             throw new UnauthorizedException("Invalid login or password");
         }
-    }
-
-    @Override
-    public ResponseEntity<?> getId(HttpServletRequest httpServlet) {
-        String authHeader = httpServlet.getHeader("Authorization");
-        String token = authHeader.substring(7);
-        String username = jwtTokenUtils.getUsername(token);
-        return ResponseEntity.ok().body(userService.findByUsername(username).getId());
     }
 
 }

@@ -1,14 +1,13 @@
 package com.order.module.service;
 
-import com.order.module.repository.OrderRepository;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import com.order.module.web.dto.OrderItemDTO;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class OrderService {
-    OrderRepository orderRepository;
+public interface OrderService {
+
+    public ResponseEntity<?> addPositionOrder(OrderItemDTO positionRequest, String token);
+
+    public ResponseEntity<?> executeOrder(String token);
 }

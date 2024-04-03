@@ -33,9 +33,4 @@ public class AuthenticationController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/get-id")
-    @PreAuthorize("hasAuthority('CLIENT')")
-    public ResponseEntity<?> getToken(HttpServletRequest request) {
-        return authenticationService.getId(request);
-    }
 }

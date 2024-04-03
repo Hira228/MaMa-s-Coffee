@@ -13,6 +13,4 @@ public interface AuthenticationService {
 
     ResponseEntity<?> authenticateUser(AuthenticationRequest authenticationRequest, BindingResult bindingResult);
 
-    ResponseEntity<?> getId(HttpServletRequest request);
-
 }

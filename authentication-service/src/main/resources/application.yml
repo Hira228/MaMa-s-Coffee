@@ -15,7 +15,7 @@ jwt:
   token:
     secret:
       key: 276c393d71334a692d3759562450442b752f285e6b6d2d62247258452a232639
-    lifetime: 30m
+    lifetime: 15m
 
 server:
   port: 8000

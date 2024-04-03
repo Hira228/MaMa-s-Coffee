@@ -17,6 +17,7 @@ spring:
     hibernate:
       ddl-auto: create
 
+
 eureka:
   client:
     service-uri:

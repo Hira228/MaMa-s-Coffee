@@ -12,7 +12,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "users")
+@Table(name = "users", indexes = {
+        @Index(name = "username_index", columnList = "username")
+})
 public class User {
 
     @Id
