@@ -30,7 +30,7 @@ public class OrderServiceImpl implements OrderService{
         String userIdStr = Objects.requireNonNull(redisTemplate.opsForValue().get(token.substring(7))).toString();
         if(userIdStr == null) return new ResponseEntity<>(new AuthError(HttpStatus.UNAUTHORIZED.value(), "Re-authorize"),  HttpStatus.UNAUTHORIZED);
 
-        Order order = orderRepository.findOrderByUserId(UUID.fromString(userIdStr));
+        Order order = orderRepository.findByUserId(UUID.fromString(userIdStr));
 
         if(order == null) {
             order = new Order();
@@ -60,13 +60,15 @@ public class OrderServiceImpl implements OrderService{
         String userIdStr = Objects.requireNonNull(redisTemplate.opsForValue().get(token.substring(7))).toString();
         if(userIdStr == null) return new ResponseEntity<>(new AuthError(HttpStatus.UNAUTHORIZED.value(), "Re-authorize"),  HttpStatus.UNAUTHORIZED);
 
-        Order order = orderRepository.findOrderByUserId(UUID.fromString(userIdStr));
+        Order order = orderRepository.findByUserId(UUID.fromString(userIdStr));
 
         if(order == null) return new ResponseEntity<>(new AuthError(HttpStatus.NO_CONTENT.value(), "You have an empty shopping cart"), HttpStatus.NO_CONTENT);
 
         order.setStatus(OrderStatus.PROCESSING);
 
         orderRepository.save(order);
+
+        // добавить логику удаления из бд и отправку по кафке ордер в сервис кухни!!!!
 
         return new ResponseEntity<>(new AuthError(HttpStatus.ACCEPTED.value(), "Your order has arrived in the kitchen. It will be ready soon."), HttpStatus.ACCEPTED);
     }
@@ -76,7 +78,7 @@ public class OrderServiceImpl implements OrderService{
         String userIdStr = Objects.requireNonNull(redisTemplate.opsForValue().get(token.substring(7))).toString();
         if(userIdStr == null) return new ResponseEntity<>(new AuthError(HttpStatus.UNAUTHORIZED.value(), "Re-authorize"),  HttpStatus.UNAUTHORIZED);
 
-        Order order = orderRepository.findOrderByUserId(UUID.fromString(userIdStr));
+        Order order = orderRepository.findByUserId(UUID.fromString(userIdStr));
 
         if(order == null) return new ResponseEntity<>(new AuthError(HttpStatus.NO_CONTENT.value(), "You have an empty shopping cart"), HttpStatus.NO_CONTENT);
 
@@ -89,5 +91,17 @@ public class OrderServiceImpl implements OrderService{
             }
         }
         return new ResponseEntity<>(new AuthError(HttpStatus.NOT_FOUND.value(), "No position with this id was found"), HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public ResponseEntity<?> getCart(String token) {
+        String userIdStr = Objects.requireNonNull(redisTemplate.opsForValue().get(token.substring(7))).toString();
+        if(userIdStr == null) return new ResponseEntity<>(new AuthError(HttpStatus.UNAUTHORIZED.value(), "Re-authorize"),  HttpStatus.UNAUTHORIZED);
+
+        Order order = orderRepository.findByUserId(UUID.fromString(userIdStr));
+
+        if(order == null) return new ResponseEntity<>(new AuthError(HttpStatus.NO_CONTENT.value(), "You have an empty shopping cart"), HttpStatus.NO_CONTENT);
+
+        return ResponseEntity.ok().body(order);
     }
 }

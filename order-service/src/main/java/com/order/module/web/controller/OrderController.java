@@ -35,6 +35,12 @@ public class OrderController {
     @DeleteMapping("/delete-position/{idPosition}")
     public ResponseEntity<?> unСart(@PathVariable UUID idPosition,
                                     @RequestHeader("Authorization") String authorizationHeader) {
+
         return orderService.unСart(idPosition, authorizationHeader);
+    }
+
+    @GetMapping("/get-cart")
+    public ResponseEntity<?> getCart(@RequestHeader("Authorization") String authorizationHeader) {
+        return orderService.getCart(authorizationHeader);
     }
 }

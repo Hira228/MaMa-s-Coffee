@@ -9,9 +9,11 @@ import java.util.UUID;
 @Service
 public interface OrderService {
 
-    public ResponseEntity<?> addPositionOrder(OrderItemDTO positionRequest, String token);
+    ResponseEntity<?> addPositionOrder(OrderItemDTO positionRequest, String token);
 
-    public ResponseEntity<?> executeOrder(String token);
+    ResponseEntity<?> executeOrder(String token);
 
-    public ResponseEntity<?> unСart(UUID idPosition, String token);
+    ResponseEntity<?> unСart(UUID idPosition, String token);
+
+    ResponseEntity<?> getCart(String token);
 }
